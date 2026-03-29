@@ -286,10 +286,10 @@ async def predict_url(request: URLRequest):
         # Ensure risk_score is in [0, 1] range
         risk_score = max(0.0, min(1.0, risk_score))
         
-        # Determine verdict (using 0.7 as threshold for PHISHING, 0.4 for SUSPICIOUS)
-        if risk_score > 0.7:
+        # Determine verdict (using 0.65 as threshold for PHISHING, 0.35 for SUSPICIOUS)
+        if risk_score > 0.65:
             verdict = "PHISHING"
-        elif risk_score > 0.4:
+        elif risk_score > 0.35:
             verdict = "SUSPICIOUS"
         else:
             verdict = "SAFE"
