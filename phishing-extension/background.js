@@ -1,7 +1,7 @@
 // background.js - Service Worker for Phishing Detection Extension
 // Handles tab monitoring, API communication, and warning triggers
 
-const API_BASE_URL = 'https://phishguard-api.onrender.com';
+const API_BASE_URL = 'https://phishguard-vurd.onrender.com';
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 500;
 const RISK_THRESHOLD = 0.6;
