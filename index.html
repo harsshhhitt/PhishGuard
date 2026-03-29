@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>protect yourself from phishing attacks | phishguard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --card-color: #111111;
+            --primary: #00ff88;
+            --danger: #ff3b3b;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --border-color: rgba(255, 255, 255, 0.05);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: lowercase;
+            letter-spacing: -0.02em;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        p {
+            color: var(--text-muted);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Nav */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 0;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: lowercase;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background-color: #00cc6a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 255, 136, 0.2);
+        }
+
+        .btn-ghost {
+            opacity: 0.8;
+        }
+
+        .btn-ghost:hover {
+            opacity: 1;
+            color: var(--primary);
+        }
+
+        /* Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 180px 0 100px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            line-height: 1.1;
+            margin-bottom: 24px;
+            max-width: 900px;
+            margin-inline: auto;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 600px;
+            margin: 0 auto 48px;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 80px;
+        }
+        
+        .hero .btn-primary {
+            padding: 16px 32px;
+            font-size: 1.1rem;
+        }
+
+        .risk-bar {
+            background: var(--card-color);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            border-radius: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .risk-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            color: var(--danger);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .risk-bar-bg {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 4px;
+            background: var(--danger);
+            width: 87%;
+            box-shadow: 0 0 10px var(--danger);
+            animation: pulse-danger 2s infinite;
+        }
+
+        @keyframes pulse-danger {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+
+        /* Stats */
+        .stats {
+            padding: 60px 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            text-align: center;
+            gap: 24px;
+        }
+
+        .stat h3 {
+            font-size: 3rem;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        /* Section Global */
+        section {
+            padding: 120px 0;
+        }
+
+        .section-header {
+            margin-bottom: 64px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+        }
+
+        /* Grid */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--card-color);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 24px;
+            color: var(--primary);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        .step-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.875rem;
+            color: var(--primary);
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        /* Extension Preview */
+        .preview-wrapper {
+            background: var(--card-color);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-mockup {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            width: 340px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            transition: var(--transition);
+        }
+
+        .popup-mockup:hover {
+            transform: scale(1.02);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .popup-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #222;
+        }
+
+        .url-box {
+            background: #1a1a1a;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            word-break: break-all;
+        }
+        
+        .url-box span {
+            color: var(--danger);
+        }
+
+        .alert-box {
+            background: rgba(255, 59, 59, 0.1);
+            border: 1px solid rgba(255, 59, 59, 0.3);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .alert-box h4 {
+            color: var(--danger);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .reasons-list {
+            list-style: none;
+            font-size: 0.85rem;
+        }
+
+        .reasons-list li {
+            margin-bottom: 8px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .reasons-list li::before {
+            content: "•";
+            color: var(--text-muted);
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 160px 0;
+            background: linear-gradient(180deg, var(--bg-color) 0%, #050505 100%);
+        }
+
+        .cta-section h2 {
+            font-size: 3.5rem;
+            margin-bottom: 16px;
+        }
+        
+        .cta-section p {
+            font-size: 1.25rem;
+            margin-bottom: 40px;
+        }
+
+        .installation-guide {
+            margin-top: 100px;
+        }
+
+        .installation-guide h3 {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .installation-guide > p {
+            margin-bottom: 48px;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            text-align: left;
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 0;
+            border-top: 1px solid var(--border-color);
+            background: #000;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-main);
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 0.875rem;
+            color: #555;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .hero {
+                padding: 140px 0 80px;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .hero-btns {
+                flex-direction: column;
+                width: 100%;
+            }
+            .hero-btns .btn {
+                width: 100%;
+            }
+            .steps-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .footer-content {
+                flex-direction: column;
+                gap: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="container nav-content">
+            <a href="#" class="logo">🛡️ phishguard</a>
+            <div class="nav-links">
+                <a href="#features">features</a>
+                <a href="#how">how it works</a>
+            </div>
+            <a href="phishguard.zip" class="btn btn-primary">Add to Chrome →</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1 class="reveal">protect yourself from phishing attacks</h1>
+            <p class="reveal">PhishGuard scans every URL in real-time using machine learning — before you get scammed.</p>
+            
+            <div class="hero-btns reveal">
+                <a href="phishguard.zip" class="btn btn-primary">Add to Chrome — it's free</a>
+                <a href="#how" class="btn btn-ghost">See how it works ↓</a>
+            </div>
+
+            <div class="risk-bar reveal">
+                <div class="risk-text">87% Risk — PHISHING DETECTED 🚨</div>
+                <div class="risk-bar-bg"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="container stats-grid reveal">
+            <div class="stat">
+                <h3>10ms</h3>
+                <p>Average scan time</p>
+            </div>
+            <div class="stat">
+                <h3>99.2%</h3>
+                <p>Detection accuracy</p>
+            </div>
+            <div class="stat">
+                <h3>100%</h3>
+                <p>Free forever</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="how" class="container">
+        <div class="section-header reveal">
+            <h2>how it works</h2>
+        </div>
+        <div class="grid-3 reveal">
+            <div class="card">
+                <span class="step-number">step 01</span>
+                <h3>you visit a site</h3>
+                <p>The extension extracts the URL instantly without tracking your personal data.</p>
+            </div>
+            <div class="card">
+                <span class="step-number">step 02</span>
+                <h3>we scan it</h3>
+                <p>Our ML model analyzes over 8 different risk signals in real-time.</p>
+            </div>
+            <div class="card">
+                <span class="step-number">step 03</span>
+                <h3>you stay safe</h3>
+                <p>Get an instant verdict and risk score warning you before you interact.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="container">
+        <div class="section-header reveal">
+            <h2>features</h2>
+        </div>
+        <div class="grid-3 reveal">
+            <div class="card">
+                <div class="card-icon">⚡</div>
+                <h3>real-time scanning</h3>
+                <p>Analysis happens the millisecond a page starts loading.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🎯</div>
+                <h3>risk score 0-100%</h3>
+                <p>Clear, quantitative assessment of every domain you visit.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🔍</div>
+                <h3>explains why</h3>
+                <p>Highlights exactly what triggered the suspicious classification.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🚧</div>
+                <h3>warning banner</h3>
+                <p>Prominent alerts block malicious pages to prevent accidental clicks.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🌐</div>
+                <h3>works on all websites</h3>
+                <p>Protects you across all websites, email links, and social media.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🔓</div>
+                <h3>100% free & open source</h3>
+                <p>Free to use, inspect, and verify. No hidden tracking.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="preview" class="container">
+        <div class="section-header reveal">
+            <h2>extension preview</h2>
+        </div>
+        <div class="preview-wrapper reveal">
+            <div class="popup-mockup">
+                <div class="popup-header">
+                    🛡️ <strong style="font-family: 'Space Grotesk'">phishguard</strong>
+                </div>
+                <div class="url-box">
+                    https://<span>login-verify-paypal</span>.xyz
+                </div>
+                <div class="alert-box">
+                    <h4>🚨 PHISHING — 87% Risk</h4>
+                </div>
+                <div style="color: var(--text-main); margin-bottom: 12px; font-weight: 500; font-size: 0.9rem;">Reasons:</div>
+                <ul class="reasons-list">
+                    <li>suspicious keywords</li>
+                    <li>no HTTPS</li>
+                    <li>too many subdomains</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container reveal">
+            <h2>start browsing safely</h2>
+            <p>free chrome extension</p>
+            <a href="phishguard.zip" class="btn btn-primary" style="font-size: 1.25rem; padding: 20px 40px;">⬇ Download PhishGuard</a>
+            <p style="margin-top: 16px; color: var(--text-muted); font-size: 0.95rem; line-height: 1.5;">Cloud-powered — no local setup needed. <br>Just install and browse safely.</p>
+
+            <div class="installation-guide reveal">
+                <h3>installation guide</h3>
+                <p>No account needed. Completely free. Always.</p>
+                <div class="steps-grid">
+                    <div class="card" style="padding: 32px 24px;">
+                        <span class="step-number">step 01</span>
+                        <p style="color: var(--text-main); font-size: 0.95rem; margin: 0;">Download & unzip <strong>phishguard.zip</strong></p>
+                    </div>
+                    <div class="card" style="padding: 32px 24px;">
+                        <span class="step-number">step 02</span>
+                        <p style="color: var(--text-main); font-size: 0.95rem; margin: 0;">Open <strong>chrome://extensions</strong></p>
+                    </div>
+                    <div class="card" style="padding: 32px 24px;">
+                        <span class="step-number">step 03</span>
+                        <p style="color: var(--text-main); font-size: 0.95rem; margin: 0;">Enable <strong>Developer Mode</strong></p>
+                    </div>
+                    <div class="card" style="padding: 32px 24px;">
+                        <span class="step-number">step 04</span>
+                        <p style="color: var(--text-main); font-size: 0.95rem; margin: 0;">Click "Load unpacked" &rarr; select the folder</p>
+                    </div>
+                    <div class="card" style="padding: 32px 24px;">
+                        <span class="step-number">step 05</span>
+                        <p style="color: var(--text-main); font-size: 0.95rem; margin: 0;">Start browsing safely!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">🛡️ phishguard</div>
+                <div class="footer-links">
+                    <a href="#">GitHub</a>
+                    <a href="#">Report a Bug</a>
+                    <a href="#">Privacy Policy</a>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2026 PhishGuard. Built with ML + ❤️
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Intersection Observer for scroll animations
+        const revealElements = document.querySelectorAll('.reveal');
+
+        const revealOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const revealObserver = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) {
+                    return;
+                }
+                entry.target.classList.add('active');
+                observer.unobserve(entry.target);
+            });
+        }, revealOptions);
+
+        revealElements.forEach(el => {
+            revealObserver.observe(el);
+        });
+        
+        // Let first elements appear immediately
+        setTimeout(() => {
+            document.querySelectorAll('.hero .reveal').forEach(el => {
+                el.classList.add('active');
+            });
+        }, 100);
+    </script>
+</body>
+</html>

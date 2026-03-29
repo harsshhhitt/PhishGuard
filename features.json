@@ -1,0 +1,20 @@
+{
+  "features": [
+    "url_length",
+    "num_dots",
+    "num_subdomains",
+    "has_keyword",
+    "has_https",
+    "num_special_chars"
+  ],
+  "feature_descriptions": {
+    "url_length": "Total length of the URL",
+    "num_dots": "Number of dots in the URL",
+    "num_subdomains": "Number of subdomains",
+    "has_keyword": "Contains suspicious keywords (login, secure, etc.)",
+    "has_https": "Uses HTTPS protocol",
+    "num_special_chars": "Number of special characters (@, -, _)"
+  },
+  "model_type": "RandomForestClassifier",
+  "threshold": 0.5
+}

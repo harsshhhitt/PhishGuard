@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishGuard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="popup-header">🛡️ PhishGuard</div>
+    
+    <div class="url-section">
+        <div class="url-label">Current URL</div>
+        <div class="url-display" id="url-display">Loading...</div>
+    </div>
+    
+    <div class="result-section">
+        <div class="verdict-badge" id="verdict">Checking...</div>
+        <div class="risk-score" id="risk-score"></div>
+        <div class="risk-bar-container">
+            <div class="risk-bar-fill" id="risk-bar"></div>
+        </div>
+        <ul class="reasons-list" id="reasons-list"></ul>
+    </div>
+    
+    <div class="status-message" id="status-message"></div>
+    
+    <button class="scan-btn" id="scan-again-btn">Scan Again</button>
+    
+    <script src="popup.js"></script>
+</body>
+</html>
