@@ -132,51 +132,37 @@ def extract_url_features(url: str) -> Dict[str, Any]:
 def generate_reasons(features: Dict[str, Any], risk_score: float) -> List[str]:
     """
     Generate human-readable reasons for the prediction.
-    Only includes reasons where features are flagged.
-    Returns max 4 most suspicious reasons.
+    Only flags genuine suspicious signals, not false positives.
     """
     reasons = []
     
-    # Check for unusual URL length
-    if features["url_length"] > 75:
+    # Check for unusual URL length (only flag if very long)
+    if features["url_length"] > 100:
         reasons.append(f"URL is unusually long ({features['url_length']} chars)")
     
-    # Check for suspicious keywords
+    # Check for suspicious keywords - only flag if NO HTTPS (reduces false positives)
     if features["has_keyword"] and features.get("found_keywords"):
-        keyword = features["found_keywords"][0]  # Take the first found keyword
-        reasons.append(f"Contains '{keyword}'")
+        if not features["has_https"]:
+            keyword = features["found_keywords"][0]
+            reasons.append(f"Contains '{keyword}' without HTTPS")
     
-    # Check for multiple subdomains
-    if features["num_subdomains"] > 1:
+    # Check for multiple subdomains - only flag if MORE than 3
+    if features["num_subdomains"] > 3:
         reasons.append(f"Too many subdomains ({features['num_subdomains']})")
     
-    # Check for missing HTTPS
-    if not features["has_https"]:
-        reasons.append("No HTTPS")
+    # Check for missing HTTPS - only flag for high-risk sites
+    if not features["has_https"] and features["has_keyword"]:
+        reasons.append("No HTTPS on suspicious domain")
     
     # Check for multiple special characters
-    if features["num_special_chars"] > 1:
+    if features["num_special_chars"] > 2:
         reasons.append("Multiple special characters")
     
     # Check for excessive dots
-    if features["num_dots"] > 4:
+    if features["num_dots"] > 5:
         reasons.append(f"Too many dots ({features['num_dots']})")
     
-    # Sort by severity and return top 4
-    # Prioritize: missing HTTPS > keywords > long URL > subdomains > special chars > dots
-    severity_order = {
-        "No HTTPS": 6,
-        "Contains": 5,
-        "URL is unusually long": 4,
-        "Too many subdomains": 3,
-        "Multiple special characters": 2,
-        "Too many dots": 1,
-    }
-    
-    # Sort by severity (descending) and take top 4
-    reasons.sort(key=lambda x: max([severity_order.get(k, 0) for k in severity_order.keys() if k in x]), reverse=True)
-    
-    return reasons[:4] if reasons else ["No obvious risk factors"]
+    return reasons[:3] if reasons else ["No suspicious indicators detected"]
 
 
 def load_model_with_retry(max_retries: int = 3, delay: float = 2.0) -> bool:
@@ -300,8 +286,13 @@ async def predict_url(request: URLRequest):
         # Ensure risk_score is in [0, 1] range
         risk_score = max(0.0, min(1.0, risk_score))
         
-        # Determine verdict (using 0.5 as threshold)
-        verdict = "PHISHING" if risk_score > 0.5 else "SAFE"
+        # Determine verdict (using 0.7 as threshold for PHISHING, 0.4 for SUSPICIOUS)
+        if risk_score > 0.7:
+            verdict = "PHISHING"
+        elif risk_score > 0.4:
+            verdict = "SUSPICIOUS"
+        else:
+            verdict = "SAFE"
         
         # Generate reasons
         reasons = generate_reasons(features, risk_score)

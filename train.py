@@ -280,7 +280,8 @@ def train_model(X: pd.DataFrame, y: pd.Series) -> RandomForestClassifier:
         min_samples_split=5,
         min_samples_leaf=2,
         random_state=42,
-        n_jobs=-1
+        n_jobs=-1,
+        class_weight='balanced'
     )
     
     start_time = time.time()
